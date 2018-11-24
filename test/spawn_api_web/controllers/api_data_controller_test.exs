@@ -7,6 +7,12 @@ defmodule SpawnApiWeb.ApiDataControllerTest do
   @create_attrs %{
     data: %{}
   }
+  @create_nested_attrs %{
+    data: %{
+      test: "test",
+      nested: %{nested_test: "test"}
+    }
+  }
   @update_attrs %{
     data: %{}
   }
@@ -38,6 +44,21 @@ defmodule SpawnApiWeb.ApiDataControllerTest do
       assert %{
                "id" => id,
                "data" => %{}
+             } = json_response(conn, 200)["data"]
+    end
+
+    test "renders api_data when nested data is valid", %{conn: conn} do
+      conn = post(conn, Routes.api_data_path(conn, :create), api_data: @create_nested_attrs)
+      assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      conn = get(conn, Routes.api_data_path(conn, :show, id))
+
+      assert %{
+               "id" => id,
+               "data" => %{
+                 "test" => "test",
+                 "nested" => %{"nested_test" => "test"}
+               }
              } = json_response(conn, 200)["data"]
     end
 

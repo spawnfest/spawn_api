@@ -7,6 +7,7 @@ defmodule SpawnApi.SpawnTest do
     alias SpawnApi.Spawn.ApiData
 
     @valid_attrs %{data: %{}}
+    @valid_nested_attrs %{data: %{test: "test", nested: %{nested_test: "test"}}}
     @update_attrs %{data: %{}}
     @invalid_attrs %{data: nil}
 
@@ -36,6 +37,11 @@ defmodule SpawnApi.SpawnTest do
 
     test "create_api_data/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Spawn.create_api_data(@invalid_attrs)
+    end
+
+    test "create_api_data/1 with valid nested data creates an api_data" do
+      assert {:ok, %ApiData{} = api_data} = Spawn.create_api_data(@valid_nested_attrs)
+      assert api_data.data == %{test: "test", nested: %{nested_test: "test"}}
     end
 
     test "update_api_data/2 with valid data updates the api_data" do
