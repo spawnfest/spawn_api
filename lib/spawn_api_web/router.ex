@@ -19,8 +19,9 @@ defmodule SpawnApiWeb.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", SpawnApiWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", SpawnApiWeb do
+    pipe_through :api
+
+    resources "/api_schemas", ApiSchemaController, except: [:new, :edit]
+  end
 end
