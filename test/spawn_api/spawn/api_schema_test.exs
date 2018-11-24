@@ -5,7 +5,7 @@ defmodule SpawnApi.ApiSchemaTest do
   alias SpawnApi.Spawn.ApiSchema
 
   describe "generate_data" do
-    @valid_attrs %{schema: %{"email" => "emails"}}
+    @valid_attrs %{schema: %{"emails" => "email"}}
 
     def api_schema_fixture(attrs \\ %{}) do
       {:ok, api_schema} =

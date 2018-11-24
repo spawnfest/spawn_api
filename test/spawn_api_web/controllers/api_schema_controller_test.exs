@@ -6,7 +6,7 @@ defmodule SpawnApiWeb.ApiSchemaControllerTest do
 
   @create_attrs %{
     schema: %{
-      email: "emails"
+      emails: "email"
     }
   }
   @create_nested_attrs %{
