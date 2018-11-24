@@ -1,51 +1,59 @@
-import React, { Fragment } from 'react'
-import { Field, reduxForm } from 'redux-form'
+import React, { Fragment, Component } from 'react'
+import { Field, FieldArray, reduxForm } from 'redux-form'
 import { Row, Col } from 'react-bootstrap'
 import submit from './Submit'
+class renderSchemaFields extends Component {
+
+  render () {
+    const { fields } = this.props;
+    return (
+      <Row>
+      {fields.map((f, index) => (
+        <span key={index}>
+        <Col md={4} label='Field Name' /> Field Name
+        <Col md={3} /> &nbsp;
+        <Col md={4} label='Type' /> Type
+        <Col md={4}>
+        <Field
+        name={`fields[${index}]`}
+        type='text'
+        component='input'
+        label={f.name}
+        placeholder={f.name}
+        />
+        </Col>
+        <Col md={3} /> &nbsp;
+        <Col md={4}>
+        <Field
+        name={`types[${index}]`}
+        type='text'
+        component='input'
+        label={f.type}
+        placeholder={f.type}
+        />
+        </Col>
+        </span>
+      ))}
+      </Row>
+    );
+  }
+}
 
 const FormGenerator = props => {
-  const { handleSubmit, submitting, fields } = props
+  const { handleSubmit, submitting, fields, addRowHandler } = props
   return (
-    <Fragment>
-      <form onSubmit={handleSubmit(submit)}>
-        <Row>
-          <Col md={6} label='Field Name' /> Field Name
-          <Col md={3} /> &nbsp;
-          <Col md={6} label='Type' /> Type
-        </Row>
-        <Row>
-          {fields.map(f => (
-            <span key={`${f.name}-${f.type}`}>
-              <Col md={6} key={f.name}>
-                <Field
-                  name={f.name}
-                  component='input'
-                  label={f.name}
-                  placeholder={f.name}
-                />
-              </Col>
-              <Col md={3} /> &nbsp;
-              <Col md={6} key={f.type}>
-                <Field
-                  name={f.type}
-                  component='input'
-                  label={f.type}
-                  placeholder={f.type}
-                />
-              </Col>
-            </span>
-          ))}
-        </Row>
-        <button type='submit' disabled={submitting}>
+    <form onSubmit={handleSubmit(submit)}>
+    <FieldArray name='schemaFields' props={{fields: fields}} component={renderSchemaFields} />
+    <button type='button' onClick={addRowHandler({ name: 'dummyField', type: 'string' })}>Add Member</button>
+    <button type='submit' disabled={submitting}>
     Create Mock Data
-        </button>
-      </form>
-    </Fragment>
+    </button>
+    </form>
   )
 }
 
 const FgForm = reduxForm({
-  form: 'wizard',
+  form: 'fgform',
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true
 })(FormGenerator)

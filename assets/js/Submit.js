@@ -2,13 +2,18 @@ import axios from "axios";
 
 function submit(values) {
   event.preventDefault();
-  axios
-  .post(API_URL, {
-    schema: values
-  })
-  .then(response => {
-    console.log(response);
-  });
+  console.log(values);
+  let schemaVals = values.fields.reduce((accumulator, f, index) => {
+    let obj = {}
+    obj[f] = values.types[index]
+    return Object.assign(accumulator, obj)}, {});
+    axios
+    .post(API_URL, {
+      schema: schemaVals
+    })
+    .then(response => {
+      console.log(response);
+    });
 };
 
 

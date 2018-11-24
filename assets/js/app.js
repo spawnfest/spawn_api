@@ -31,14 +31,20 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formFields: [{ name: "email", type: "string" }]
+      formFields: [{ name: "dummyField", type: "string" }]
     };
+  }
+
+  addRow = (obj) => (e) => {
+    this.setState(previousState => ({
+      formFields: [...previousState.formFields, obj]
+    }))
   }
 
   render() {
     return (
       <Fragment>
-      <FgForm fields={this.state.formFields} />
+      <FgForm fields={this.state.formFields} addRowHandler={this.addRow} />
       </Fragment>
     );
   }
