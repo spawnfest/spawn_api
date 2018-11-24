@@ -9,35 +9,31 @@ const FormGenerator = props => {
     <Fragment>
       <form onSubmit={handleSubmit(submit)}>
         <Row>
-          <Col md={6} key='Field Name' />
-        </Row>
-        <Row>
-          <Col md={6} key='Type' />
+          <Col md={6} label='Field Name' /> Field Name
+          <Col md={3} /> &nbsp;
+          <Col md={6} label='Type' /> Type
         </Row>
         <Row>
           {fields.map(f => (
-            <div key={`${f.name}-${f.type}`}>
-              <Fragment>
-                <Col md={6} key={f.name}>
-                  <Field
-                    name={f.name}
-                    component='input'
-                    label={f.name}
-                    placeholder={f.name}
-                  />
-                </Col>
-              </Fragment>
-              <Fragment>
-                <Col md={6} key={f.type}>
-                  <Field
-                    name={f.type}
-                    component='input'
-                    label={f.type}
-                    placeholder={f.type}
-                  />
-                </Col>
-              </Fragment>
-            </div>
+            <span key={`${f.name}-${f.type}`}>
+              <Col md={6} key={f.name}>
+                <Field
+                  name={f.name}
+                  component='input'
+                  label={f.name}
+                  placeholder={f.name}
+                />
+              </Col>
+              <Col md={3} /> &nbsp;
+              <Col md={6} key={f.type}>
+                <Field
+                  name={f.type}
+                  component='input'
+                  label={f.type}
+                  placeholder={f.type}
+                />
+              </Col>
+            </span>
           ))}
         </Row>
         <button type='submit' disabled={submitting}>
