@@ -13,6 +13,13 @@ defmodule SpawnApiWeb.FallbackController do
     |> render("error.json", changeset: changeset)
   end
 
+  def call(conn, {:error, status, %{message: message}}) do
+    conn
+    |> put_status(status)
+    |> put_view(SpawnApiWeb.ApiSchemaView)
+    |> render("error.json", %{message: message})
+  end
+
   def call(conn, {:error, :not_found}) do
     conn
     |> put_status(:not_found)

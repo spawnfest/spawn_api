@@ -12,30 +12,36 @@ defmodule SpawnApiWeb.ApiSchemaController do
 
   def index(conn, _params) do
     api_schemas = Spawn.list_api_schemas()
-    render(conn, "index.json", schemas: api_schemas)
+    render(conn, "index.json", api_schemas: api_schemas)
   end
 
-  def create(conn, %{"schema" => schema} = schema_params) do
+  def create(conn, %{"schema" => _schema} = schema_params) do
     with {:ok, %ApiSchema{} = api_schema} <- Spawn.create_api_schema(schema_params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.api_schema_path(conn, :show, api_schema))
-      |> render("show.json", schema: api_schema)
+      |> render("show.json", api_schema: api_schema)
     end
   end
 
+  def create(_conn, _),
+    do: {:error, :unprocessable_entity, %{message: "Missing schema parameter"}}
+
   def show(conn, %{"id" => id}) do
     api_schema = Spawn.get_api_schema!(id)
-    render(conn, "show.json", schema: api_schema)
+    render(conn, "show.json", api_schema: api_schema)
   end
 
   def update(conn, %{"id" => id, "schema" => schema_params}) do
     api_schema = Spawn.get_api_schema!(id)
 
     with {:ok, %ApiSchema{} = api_schema} <- Spawn.update_api_schema(api_schema, schema_params) do
-      render(conn, "show.json", schema: api_schema)
+      render(conn, "show.json", api_schema: api_schema)
     end
   end
+
+  def update(_conn, _),
+    do: {:error, :unprocessable_entity, %{message: "Missing schema or id parameter"}}
 
   def delete(conn, %{"id" => id}) do
     api_schema = Spawn.get_api_schema!(id)
