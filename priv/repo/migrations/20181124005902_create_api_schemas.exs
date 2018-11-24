@@ -3,7 +3,7 @@ defmodule SpawnApi.Repo.Migrations.CreateApiSchemas do
 
   def change do
     create table(:api_schemas) do
-      add :schema, :map
+      add :schema, :map, default: %{}
 
       timestamps()
     end

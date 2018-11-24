@@ -3,7 +3,7 @@ defmodule SpawnApi.Spawn.ApiSchema do
   import Ecto.Changeset
 
   schema "api_schemas" do
-    field :schema, :map
+    field :schema, :map, default: %{}
 
     timestamps()
   end
