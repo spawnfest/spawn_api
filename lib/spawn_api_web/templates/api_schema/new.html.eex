@@ -1,0 +1,11 @@
+<div class="jumbotron">
+  <h2><%= gettext "Welcome to %{name}!", name: "Spawn Api" %></h2>
+  <p class="lead">An API data generator that creates mock API data for you!</p>
+</div>
+
+<div class="row">
+  <div class="col-lg-12" id="spawn-app">
+  </div>
+</div>
+
+
