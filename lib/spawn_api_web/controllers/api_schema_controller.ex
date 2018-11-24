@@ -6,6 +6,10 @@ defmodule SpawnApiWeb.ApiSchemaController do
 
   action_fallback SpawnApiWeb.FallbackController
 
+  def new(conn, _params) do
+    render(conn, "new.html")
+  end
+
   def index(conn, _params) do
     api_schemas = Spawn.list_api_schemas()
     render(conn, "index.json", api_schemas: api_schemas)
