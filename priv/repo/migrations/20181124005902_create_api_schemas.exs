@@ -1,8 +1,8 @@
-defmodule SpawnApi.Repo.Migrations.CreateApiDatas do
+defmodule SpawnApi.Repo.Migrations.CreateApiSchemas do
   use Ecto.Migration
 
   def change do
-    create table(:api_datas) do
+    create table(:api_schemas) do
       add :data, :map
 
       timestamps()
