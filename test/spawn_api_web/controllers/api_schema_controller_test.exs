@@ -5,10 +5,10 @@ defmodule SpawnApiWeb.ApiSchemaControllerTest do
   alias SpawnApi.Spawn.ApiSchema
 
   @create_attrs %{
-    schema: %{}
+    data: %{}
   }
   @create_nested_attrs %{
-    schema: %{
+    data: %{
       test: "test",
       nested: %{nested_test: "test"}
     }
@@ -16,7 +16,6 @@ defmodule SpawnApiWeb.ApiSchemaControllerTest do
   @update_attrs %{
     schema: %{}
   }
-  @invalid_attrs %{schema: nil}
 
   def fixture(:api_schema) do
     {:ok, api_schema} = Spawn.create_api_schema(@create_attrs)
@@ -56,14 +55,16 @@ defmodule SpawnApiWeb.ApiSchemaControllerTest do
       assert %{
                "id" => id,
                "schema" => %{
-                 "test" => "test",
-                 "nested" => %{"nested_test" => "test"}
+                 "data" => %{
+                   "test" => "test",
+                   "nested" => %{"nested_test" => "test"}
+                 }
                }
              } = json_response(conn, 200)["schema"]
     end
 
-    test "renders errors when schema is invalid", %{conn: conn} do
-      conn = post(conn, Routes.api_schema_path(conn, :create), schema: @invalid_attrs)
+    test "renders errors when schema is not a parameter", %{conn: conn} do
+      conn = post(conn, Routes.api_schema_path(conn, :create))
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -87,8 +88,8 @@ defmodule SpawnApiWeb.ApiSchemaControllerTest do
              } = json_response(conn, 200)["schema"]
     end
 
-    test "renders errors when schema is invalid", %{conn: conn, schema: api_schema} do
-      conn = put(conn, Routes.api_schema_path(conn, :update, api_schema), schema: @invalid_attrs)
+    test "renders errors when schema is not a parameter", %{conn: conn, schema: api_schema} do
+      conn = put(conn, Routes.api_schema_path(conn, :update, api_schema))
 
       assert json_response(conn, 422)["errors"] != %{}
     end

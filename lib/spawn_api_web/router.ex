@@ -13,16 +13,16 @@ defmodule SpawnApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/api", SpawnApiWeb do
+    pipe_through :api
+
+    resources "/api_schemas", ApiSchemaController, except: [:new, :edit]
+  end
+
   scope "/", SpawnApiWeb do
     pipe_through :browser
 
     get "/api_schemas/new", ApiSchemaController, :new
     get "/*path", ApiSchemaController, :new
-  end
-
-  scope "/api", SpawnApiWeb do
-    pipe_through :api
-
-    resources "/api_schemas", ApiSchemaController, except: [:new, :edit]
   end
 end
