@@ -11,7 +11,7 @@ class renderSchemaFields extends Component {
           <span key={index}>
             <Col md={4} label="Field Name" /> Field Name
             <Col md={3} /> &nbsp;
-            <Col md={4} label="Type" /> Type
+            <Col md={4} label="Field Value" /> Field Value
             <Col md={4}>
               <Field
                 name={`fields[${index}]`}
