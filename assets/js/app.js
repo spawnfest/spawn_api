@@ -15,3 +15,37 @@ import "phoenix_html"
 //
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
+//
+//
+
+import React, { Fragment } from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import FgForm from "./FormGenerator";
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      formFields: [{name: "email", type: "string"}]
+    }
+  }
+
+  render() {
+    return (
+      <Fragment>
+      <FgForm fields={this.state.formFields}/>
+      </Fragment>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Router>
+  <App />
+  </Router>,
+  document.getElementById("spawn-app")
+);
+
+export default App;
+
