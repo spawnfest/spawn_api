@@ -44,7 +44,7 @@ const FormGenerator = props => {
   return (
     <form onSubmit={handleSubmit(submit)}>
     <FieldArray name='schemaFields' props={{fields: fields}} component={renderSchemaFields} />
-    <button type='button' onClick={addRowHandler({ name: 'dummyField', type: 'string' })}>Add Member</button>
+    <button type='button' onClick={addRowHandler({ name: 'dummyField', type: 'string' })}>Add Row</button>
     <button type='submit' disabled={submitting}>
     Create Mock Data
     </button>
