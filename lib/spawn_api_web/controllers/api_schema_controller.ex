@@ -15,7 +15,7 @@ defmodule SpawnApiWeb.ApiSchemaController do
     render(conn, "index.json", api_schemas: api_schemas)
   end
 
-  def create(conn, %{"api_schema" => api_schema_params}) do
+  def create(conn, %{"schema" => schema} = api_schema_params) do
     with {:ok, %ApiSchema{} = api_schema} <- Spawn.create_api_schema(api_schema_params) do
       conn
       |> put_status(:created)

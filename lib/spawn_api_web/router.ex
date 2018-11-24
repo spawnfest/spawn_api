@@ -16,8 +16,7 @@ defmodule SpawnApiWeb.Router do
   scope "/", SpawnApiWeb do
     pipe_through :browser
 
-    # get "/api_data/:id", ApiDataController, :show
-    get "/api_data/new", ApiScehmaController, :new
+    get "/api_schemas/new", ApiSchemaController, :new
     get "/*path", ApiSchemaController, :new
   end
 

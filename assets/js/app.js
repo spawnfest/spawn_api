@@ -38,7 +38,7 @@ class App extends React.Component {
   render() {
     return (
       <Fragment>
-        <FgForm fields={this.state.formFields} />
+      <FgForm fields={this.state.formFields} />
       </Fragment>
     );
   }
@@ -46,9 +46,9 @@ class App extends React.Component {
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>
-      <App />
-    </Router>
+  <Router>
+  <App />
+  </Router>
   </Provider>,
   document.getElementById("spawn-app")
 );
