@@ -17,6 +17,13 @@ config :spawn_api, SpawnApiWeb.Endpoint,
   url: [host: "anotherboring.website", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
+config :spawn_api, SpawnApi.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: "${DATABASE_URL}",
+  database: "spawn_api_prod",
+  ssl: true,
+  pool_size: 2
+
 # Do not print debug messages in production
 config :logger, level: :info
 

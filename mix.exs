@@ -43,7 +43,7 @@ defmodule SpawnApi.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:distillery, "~> 1.5.5"},
+      {:distillery, "~> 2.0.0"},
       {:faker, "~> 0.11"}
     ]
   end
@@ -55,7 +55,7 @@ defmodule SpawnApi.MixProject do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
-    [
+   [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
