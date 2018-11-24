@@ -23,5 +23,14 @@ defmodule SpawnApi.ApiSchemaTest do
 
       assert String.contains?(email, "@") == true
     end
+
+    test "generate should return 10 rows of emails" do
+      emails =
+        api_schema_fixture(@valid_attrs)
+        |> ApiSchema.generate(10)
+        |> Map.get("emails")
+
+      assert length(emails) == 10
+    end
   end
 end

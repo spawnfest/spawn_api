@@ -5,10 +5,12 @@ defmodule SpawnApiWeb.ApiSchemaControllerTest do
   alias SpawnApi.Spawn.ApiSchema
 
   @create_attrs %{
-    data: %{}
+    schema: %{
+      email: "emails"
+    }
   }
   @create_nested_attrs %{
-    data: %{
+    schema: %{
       test: "test",
       nested: %{nested_test: "test"}
     }
@@ -55,7 +57,7 @@ defmodule SpawnApiWeb.ApiSchemaControllerTest do
       assert %{
                "id" => id,
                "schema" => %{
-                 "data" => %{
+                 "schema" => %{
                    "test" => "test",
                    "nested" => %{"nested_test" => "test"}
                  }
@@ -92,6 +94,20 @@ defmodule SpawnApiWeb.ApiSchemaControllerTest do
       conn = put(conn, Routes.api_schema_path(conn, :update, api_schema))
 
       assert json_response(conn, 422)["errors"] != %{}
+    end
+  end
+
+  describe "generate api_schema" do
+    setup [:create_api_schema]
+
+    test "generates 10 rows of chosen api_schema", %{
+      conn: conn,
+      schema: %ApiSchema{id: id} = api_schema
+    } do
+      conn = get(conn, Routes.api_schema_path(conn, :generate, api_schema))
+      json = json_response(conn, 200)
+      assert %{"id" => ^id} = json["schema"]
+      assert json["data"] |> Map.get("emails") |> length() == 10
     end
   end
 
