@@ -9,10 +9,8 @@ class renderSchemaFields extends Component {
       <Row>
         {fields.map((f, index) => (
           <span key={index}>
-            <Col md={4} label="Field Name" /> Field Name
-            <Col md={3} /> &nbsp;
-            <Col md={4} label="Field Value" /> Field Value
-            <Col md={4}>
+            <Col md={4} label="Field Name">
+              Field Name
               <Field
                 name={`fields[${index}]`}
                 type="text"
@@ -22,7 +20,8 @@ class renderSchemaFields extends Component {
               />
             </Col>
             <Col md={3} /> &nbsp;
-            <Col md={4}>
+            <Col md={4} label="Field Type">
+              Field Type
               <Field
                 name={`types[${index}]`}
                 type="text"

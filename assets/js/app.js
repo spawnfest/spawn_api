@@ -31,20 +31,20 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formFields: [{ name: "dummyField", type: "string" }]
+      formFields: [{ name: "email", type: "email" }]
     };
   }
 
-  addRow = (obj) => (e) => {
+  addRow = obj => e => {
     this.setState(previousState => ({
       formFields: [...previousState.formFields, obj]
-    }))
-  }
+    }));
+  };
 
   render() {
     return (
       <Fragment>
-      <FgForm fields={this.state.formFields} addRowHandler={this.addRow} />
+        <FgForm fields={this.state.formFields} addRowHandler={this.addRow} />
       </Fragment>
     );
   }
@@ -52,9 +52,9 @@ class App extends React.Component {
 
 ReactDOM.render(
   <Provider store={store}>
-  <Router>
-  <App />
-  </Router>
+    <Router>
+      <App />
+    </Router>
   </Provider>,
   document.getElementById("spawn-app")
 );
