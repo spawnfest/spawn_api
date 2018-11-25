@@ -25,30 +25,25 @@ defmodule SpawnApi.Spawn.ApiSchema do
     |> validate_required([:schema])
   end
 
-  @spec generate(schema(), integer()) :: Map.t()
-  def generate(%ApiSchema{} = api_schema, rows \\ 1000) do
-    0..(rows - 1)
-    |> Enum.map(fn i ->
-      generate_data(api_schema, %{index: i})
-    end)
-    |> Enum.reduce(%{}, fn map, acc ->
-      Enum.reduce(map, acc, fn {name, data}, acc ->
-        cond do
-          curr_data = Map.get(acc, name) ->
-            Map.put(acc, name, curr_data ++ [data])
-
-          true ->
-            Map.put(acc, name, [data])
-        end
-      end)
+  @spec generate_data(schema(), Map.t()) :: Map.t()
+  def generate_data(%ApiSchema{} = api_schema, params \\ %{}, rows \\ 1000) do
+    Enum.reduce(api_schema.schema, %{}, fn {name, type}, acc ->
+      data = generate_rows(type, params, rows)
+      Map.put(acc, name, data)
     end)
   end
 
-  @spec generate_data(schema(), Map.t()) :: Map.t()
-  def generate_data(%ApiSchema{} = api_schema, params \\ %{}) do
-    Enum.reduce(api_schema.schema, %{}, fn {name, type}, acc ->
-      data = Generator.generate(type, params)
-      Map.put(acc, name, data)
-    end)
+  @spec generate_rows(String.t(), Map.t(), integer) :: List.t()
+  def generate_rows(type, params, rows) do
+    cond do
+      rows > 1 ->
+        0..(rows - 1)
+        |> Enum.map(fn i ->
+          Generator.generate(type, Map.put(params, :index, i - 1))
+        end)
+
+      true ->
+        [Generator.generate(type, Map.put(params, :index, 0))]
+    end
   end
 end
