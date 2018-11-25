@@ -29,6 +29,10 @@ defmodule SpawnApi.Spawn.ApiSchema do
   def generate_data(api_schema, params \\ %{}, rows \\ 1000)
   def generate_data(_, _, rows) when rows <= 0, do: %{}
 
+  def generate_data(api_schema, params, rows) when rows > 100_000 do
+    generate_data(api_schema, params, 100_000)
+  end
+
   def generate_data(%ApiSchema{} = api_schema, params, rows) do
     Enum.reduce(api_schema.schema, %{}, fn {name, type}, acc ->
       data = generate_rows(type, params, rows)
