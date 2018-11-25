@@ -6,6 +6,14 @@ defmodule SpawnApi.Spawn.Generator do
   def generate("email", _), do: Faker.Internet.email()
   def generate("ip_v4_address", _), do: Faker.Internet.ip_v4_address()
   def generate("ip_v6_address", _), do: Faker.Internet.ip_v6_address()
+  def generate("city", _), do: Faker.Address.city()
+  def generate("country", _), do: Faker.Address.country()
+  def generate("latitude", _), do: Faker.Address.latitude()
+  def generate("longitude", _), do: Faker.Address.longitude()
+  def generate("time_zone", _), do: Faker.Address.time_zone()
+  def generate("zip_code", _), do: Faker.Address.zip_code()
+  def generate("country_code", _), do: Faker.Address.country_code()
+  def generate("uuid", _), do: Faker.UUID.v4()
 
   def generate("integer", params) do
     Enum.random(Map.get(params, :range, 0..1000))
