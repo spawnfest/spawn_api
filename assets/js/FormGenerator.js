@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from "react";
+import React, { Fragment } from "react";
 import { Field, FieldArray, reduxForm } from "redux-form";
 import { Row, Col } from "react-bootstrap";
 import submit from "./Submit";
