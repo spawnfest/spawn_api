@@ -17,6 +17,7 @@ defmodule SpawnApiWeb.Router do
     pipe_through :api
 
     resources "/api_schemas", ApiSchemaController, except: [:new, :edit]
+    get "/api_schemas/export_csv/:id", ApiSchemaController, :export_csv
     get "/api_schemas/generate/:id", ApiSchemaController, :generate
   end
 

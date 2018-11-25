@@ -3,6 +3,7 @@ defmodule SpawnApiWeb.ApiSchemaController do
 
   alias SpawnApi.Spawn
   alias SpawnApi.Spawn.ApiSchema
+  alias NimbleCSV.RFC4180, as: CSV
 
   action_fallback SpawnApiWeb.FallbackController
 
@@ -38,11 +39,23 @@ defmodule SpawnApiWeb.ApiSchemaController do
     with {:ok, api_schema} <- Spawn.get_api_schema(id),
          {:ok, num_rows} <- SpawnApi.Utils.parse_integer(rows) do
       data = ApiSchema.generate_data(api_schema, %{}, num_rows)
+
+      conn
+      |> render("generated_data.json", %{schema: api_schema, data: data})
+    end
+  end
+
+  def export_csv(conn, %{"id" => id, "rows" => rows} = params) do
+    with {:ok, api_schema} <- Spawn.get_api_schema(id),
+         {:ok, num_rows} <- SpawnApi.Utils.parse_integer(rows) do
+      data = ApiSchema.generate_data(api_schema, %{}, num_rows)
       render_file = String.to_existing_atom(Map.get(params, "file", "false"))
+
+      csv_data = transpose_generated_data(data)
 
       conn
       |> put_download_header(render_file)
-      |> render("generated_data.json", %{schema: api_schema, data: data})
+      |> send_resp(200, csv_data)
     end
   end
 
@@ -73,8 +86,20 @@ defmodule SpawnApiWeb.ApiSchemaController do
     end
   end
 
+  defp transpose_generated_data(data) do
+    # strip potential csv headers
+    data
+    |> Enum.reduce([], fn {k, data_list}, acc -> acc ++ [data_list] end)
+    |> Enum.zip()
+    |> Enum.map(&Tuple.to_list/1)
+    |> CSV.dump_to_iodata()
+  end
+
+  defp vertical_transpose(accumulated_lists) do
+  end
+
   defp put_download_header(conn, true) do
-    put_resp_header(conn, "Content-Disposition", "attachment")
+    put_resp_header(conn, "Content-Disposition", "attachment; filename=\"mock_data.csv\"")
   end
 
   defp put_download_header(conn, false), do: conn
