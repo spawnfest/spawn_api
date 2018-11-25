@@ -3,7 +3,7 @@ defmodule SpawnApiWeb.ApiSchemaController do
 
   alias SpawnApi.Spawn
   alias SpawnApi.Spawn.ApiSchema
-  alias NimbleCSV.RFC4180, as: CSV
+  alias SpawnApi.Utils.CSV, as: CSVUtils
 
   action_fallback SpawnApiWeb.FallbackController
 
@@ -51,10 +51,10 @@ defmodule SpawnApiWeb.ApiSchemaController do
       data = ApiSchema.generate_data(api_schema, %{}, num_rows)
       render_file = String.to_existing_atom(Map.get(params, "file", "false"))
 
-      csv_data = transpose_generated_data(data)
+      csv_data = CSVUtils.transpose_generated_data(data)
 
       conn
-      |> put_download_header(render_file)
+      |> put_download_header(params, render_file)
       |> send_resp(200, csv_data)
     end
   end
@@ -86,29 +86,16 @@ defmodule SpawnApiWeb.ApiSchemaController do
     end
   end
 
-  defp transpose_generated_data(data) do
-    (header_data(data) ++ column_data(data))
-    |> CSV.dump_to_iodata()
+  defp put_download_header(conn, params, true) do
+    filename = Map.get(params, "filename", "data")
+    extension = Map.get(params, "format", "csv")
+
+    put_resp_header(
+      conn,
+      "Content-Disposition",
+      "attachment; filename=\"#{filename}.#{extension}\""
+    )
   end
 
-  defp column_data(generated_data) do
-    generated_data
-    |> Enum.reduce([], fn {k, data_list}, acc -> acc ++ [data_list] end)
-    |> Enum.zip()
-    |> Enum.map(&Tuple.to_list/1)
-  end
-
-  defp header_data(generated_data) do
-    headers =
-      generated_data
-      |> Enum.reduce([], fn {k, _data_list}, acc -> acc ++ [k] end)
-
-    [headers]
-  end
-
-  defp put_download_header(conn, true) do
-    put_resp_header(conn, "Content-Disposition", "attachment; filename=\"mock_data.csv\"")
-  end
-
-  defp put_download_header(conn, false), do: conn
+  defp put_download_header(conn, _params, false), do: conn
 end

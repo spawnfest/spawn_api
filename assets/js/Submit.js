@@ -15,7 +15,7 @@ const submit = values => {
     console.log(response);
     window.location = `${API_URL}/export_csv/${
     response.data.schema.id
-  }?rows=${rows}&file=true`;
+  }?rows=${rows}&file=true&filename=mock_data&format=csv`;
 });
 };
 
