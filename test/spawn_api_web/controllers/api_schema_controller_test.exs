@@ -118,9 +118,10 @@ defmodule SpawnApiWeb.ApiSchemaControllerTest do
       conn = delete(conn, Routes.api_schema_path(conn, :delete, api_schema))
       assert response(conn, 204)
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.api_schema_path(conn, :show, api_schema))
-      end
+      conn = get(conn, Routes.api_schema_path(conn, :show, api_schema))
+      json = json_response(conn, 422)
+      error_message = Map.get(List.first(json["errors"]), "message")
+      assert error_message =~ "ApiSchema not found for"
     end
   end
 

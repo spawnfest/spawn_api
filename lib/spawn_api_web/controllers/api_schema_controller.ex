@@ -28,27 +28,36 @@ defmodule SpawnApiWeb.ApiSchemaController do
     do: {:error, :unprocessable_entity, %{message: "Missing schema parameter"}}
 
   def show(conn, %{"id" => id}) do
-    api_schema = Spawn.get_api_schema!(id)
-    render(conn, "show.json", api_schema: api_schema)
+    with {:ok, api_schema} <- Spawn.get_api_schema(id) do
+      conn
+      |> render("show.json", api_schema: api_schema)
+    end
   end
 
   def generate(conn, %{"id" => id, "rows" => rows}) do
-    api_schema = Spawn.get_api_schema!(id)
-    data = ApiSchema.generate_data(api_schema, %{}, String.to_integer(rows) || 10)
-    render(conn, "generated_data.json", %{schema: api_schema, data: data})
+    with {:ok, api_schema} <- Spawn.get_api_schema(id),
+         {:ok, num_rows} <- SpawnApi.Utils.parse_integer(rows) do
+      data = ApiSchema.generate_data(api_schema, %{}, num_rows)
+
+      conn
+      |> render("generated_data.json", %{schema: api_schema, data: data})
+    end
   end
 
   def generate(conn, %{"id" => id}) do
-    api_schema = Spawn.get_api_schema!(id)
-    data = ApiSchema.generate_data(api_schema, %{}, 10)
-    render(conn, "generated_data.json", %{schema: api_schema, data: data})
+    with {:ok, api_schema} <- Spawn.get_api_schema(id) do
+      data = ApiSchema.generate_data(api_schema, %{}, 10)
+
+      conn
+      |> render("generated_data.json", %{schema: api_schema, data: data})
+    end
   end
 
   def update(conn, %{"id" => id, "schema" => schema_params}) do
-    api_schema = Spawn.get_api_schema!(id)
-
-    with {:ok, %ApiSchema{} = api_schema} <- Spawn.update_api_schema(api_schema, schema_params) do
-      render(conn, "show.json", api_schema: api_schema)
+    with {:ok, api_schema} <- Spawn.get_api_schema(id),
+         {:ok, %ApiSchema{} = api_schema} <- Spawn.update_api_schema(api_schema, schema_params) do
+      conn
+      |> render("show.json", api_schema: api_schema)
     end
   end
 
@@ -56,9 +65,8 @@ defmodule SpawnApiWeb.ApiSchemaController do
     do: {:error, :unprocessable_entity, %{message: "Missing schema or id parameter"}}
 
   def delete(conn, %{"id" => id}) do
-    api_schema = Spawn.get_api_schema!(id)
-
-    with {:ok, %ApiSchema{}} <- Spawn.delete_api_schema(api_schema) do
+    with {:ok, api_schema} <- Spawn.get_api_schema(id),
+         {:ok, %ApiSchema{}} <- Spawn.delete_api_schema(api_schema) do
       send_resp(conn, :no_content, "")
     end
   end
