@@ -15,7 +15,7 @@ const submit = values => {
       console.log(response);
       window.location = `${API_URL}/generate/${
         response.data.schema.id
-      }?rows=${rows}`;
+      }?rows=${rows}&file=true`;
     });
 };
 
