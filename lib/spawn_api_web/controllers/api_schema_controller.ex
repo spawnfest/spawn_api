@@ -40,6 +40,7 @@ defmodule SpawnApiWeb.ApiSchemaController do
       data = ApiSchema.generate_data(api_schema, %{}, num_rows)
 
       conn
+      |> put_resp_header("Content-Disposition", "attachment")
       |> render("generated_data.json", %{schema: api_schema, data: data})
     end
   end
