@@ -32,6 +32,18 @@ defmodule SpawnApiWeb.ApiSchemaController do
     render(conn, "show.json", api_schema: api_schema)
   end
 
+  def generate(conn, %{"id" => id, "rows" => rows}) do
+    api_schema = Spawn.get_api_schema!(id)
+    data = ApiSchema.generate_data(api_schema, %{}, String.to_integer(rows) || 10)
+    render(conn, "generated_data.json", %{schema: api_schema, data: data})
+  end
+
+  def generate(conn, %{"id" => id}) do
+    api_schema = Spawn.get_api_schema!(id)
+    data = ApiSchema.generate_data(api_schema, %{}, 10)
+    render(conn, "generated_data.json", %{schema: api_schema, data: data})
+  end
+
   def update(conn, %{"id" => id, "schema" => schema_params}) do
     api_schema = Spawn.get_api_schema!(id)
 
