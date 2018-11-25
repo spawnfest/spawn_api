@@ -38,6 +38,19 @@ defmodule SpawnApi.Spawn do
   def get_api_schema!(id), do: Repo.get!(ApiSchema, id)
 
   @doc """
+  Gets a single api_schema.
+
+  Returns {:error, :unprocessable_entity, %{message: "ApiSchema not found for 123"}} or {:ok, api_schema}
+
+  """
+  def get_api_schema(id) do
+    case Repo.get(ApiSchema, id) do
+      nil -> {:error, :unprocessable_entity, %{message: "ApiSchema not found for #{inspect(id)}"}}
+      api_schema -> {:ok, api_schema}
+    end
+  end
+
+  @doc """
   Creates a api_schema.
 
   ## Examples
