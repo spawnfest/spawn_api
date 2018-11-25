@@ -87,15 +87,23 @@ defmodule SpawnApiWeb.ApiSchemaController do
   end
 
   defp transpose_generated_data(data) do
-    # strip potential csv headers
-    data
-    |> Enum.reduce([], fn {k, data_list}, acc -> acc ++ [data_list] end)
-    |> Enum.zip()
-    |> Enum.map(&Tuple.to_list/1)
+    (header_data(data) ++ column_data(data))
     |> CSV.dump_to_iodata()
   end
 
-  defp vertical_transpose(accumulated_lists) do
+  defp column_data(generated_data) do
+    generated_data
+    |> Enum.reduce([], fn {k, data_list}, acc -> acc ++ [data_list] end)
+    |> Enum.zip()
+    |> Enum.map(&Tuple.to_list/1)
+  end
+
+  defp header_data(generated_data) do
+    headers =
+      generated_data
+      |> Enum.reduce([], fn {k, _data_list}, acc -> acc ++ [k] end)
+
+    [headers]
   end
 
   defp put_download_header(conn, true) do
