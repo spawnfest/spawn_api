@@ -2,7 +2,7 @@ import React from "react";
 import { Field, FieldArray, reduxForm } from "redux-form";
 import { Row, Col } from "react-bootstrap";
 import DropdownList from "react-widgets/lib/DropdownList";
-import submit from "./Submit";
+import submit from "./submit";
 import DATA_TYPES from "./data-types";
 
 import "react-widgets/dist/css/react-widgets.css";

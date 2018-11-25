@@ -22,7 +22,7 @@ import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
-import FgForm from "./FormGenerator";
+import FgForm from "./form-generator";
 import createReduxStore from "./create-redux-store";
 
 const store = createReduxStore();
@@ -31,8 +31,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formFields: [{ name: "name", type: "email" }],
-      numRows: 100
+      formFields: [{ name: "name", type: "email" }]
     };
   }
 
