@@ -38,15 +38,9 @@ defmodule SpawnApi.Spawn.ApiSchema do
 
   @spec generate_rows(String.t(), Map.t(), integer) :: List.t()
   def generate_rows(type, params, rows) do
-    cond do
-      rows > 1 ->
-        0..(rows - 1)
-        |> Enum.map(fn i ->
-          Generator.generate(type, Map.put(params, :index, i - 1))
-        end)
-
-      true ->
-        [Generator.generate(type, Map.put(params, :index, 0))]
-    end
+    0..(rows - 1)
+    |> Enum.map(fn i ->
+      Generator.generate(type, Map.put(params, :index, i))
+    end)
   end
 end
