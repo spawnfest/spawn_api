@@ -21,7 +21,7 @@ import "phoenix_html";
 import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import FgForm from "./FormGenerator";
 import createReduxStore from "./create-redux-store";
 
@@ -31,7 +31,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formFields: [{ name: "email", type: "email" }]
+      formFields: [{ name: "name", type: "email" }],
+      numRows: 100
     };
   }
 

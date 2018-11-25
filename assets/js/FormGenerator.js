@@ -1,36 +1,93 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Field, FieldArray, reduxForm } from "redux-form";
 import { Row, Col } from "react-bootstrap";
+import DropdownList from "react-widgets/lib/DropdownList";
 import submit from "./Submit";
+import DATA_TYPES from "./data-types";
+
+import "react-widgets/dist/css/react-widgets.css";
+
+const renderDropdownList = ({ input, data, valueField, textField }) => (
+  <DropdownList
+    {...input}
+    data={data}
+    valueField={valueField}
+    textField={textField}
+    onChange={input.onChange}
+  />
+);
 
 const RenderSchemaFields = ({ fields }) => {
   return (
-    <Row>
+    <div>
       {fields.map((f, index) => (
         <span key={index}>
-          <Col md={4} label="Field Name">
-            Field Name
-            <Field
-              name={`fields[${index}]`}
-              type="text"
-              component="input"
-              label={f.name}
-              placeholder={f.name}
-            />
-          </Col>
-          <Col md={3} /> &nbsp;
-          <Col md={4} label="Field Type">
-            Field Type
-            <Field
-              name={`types[${index}]`}
-              type="text"
-              component="input"
-              label={f.type}
-              placeholder={f.type}
-            />
-          </Col>
+          <Row>
+            <Col sm={5} label="Field Name">
+              Field Name
+              <Field
+                name={`fields[${index}]`}
+                type="text"
+                component="input"
+                label={f.name}
+                placeholder={f.name}
+              />
+            </Col>
+            <Col sm={2} /> &nbsp;
+            <Col sm={5} label="Field Type">
+              Field Type
+              <Field
+                name={`types[${index}]`}
+                component={renderDropdownList}
+                data={DATA_TYPES}
+                valueField="value"
+                textField="name"
+              />
+            </Col>
+          </Row>
         </span>
       ))}
+    </div>
+  );
+};
+
+const NumberOfRows = () => {
+  return (
+    <Row>
+      <Col sm={12}>
+        Number Of Rows
+        <Field
+          name="numRows"
+          type="number"
+          component="input"
+          label="Number of Rows"
+        />
+      </Col>
+    </Row>
+  );
+};
+
+const Buttons = ({ addRowHandler, submitting }) => {
+  return (
+    <Row>
+      <Col sm={6}>
+        <button
+          className="form-buttons add-row-button"
+          type="button"
+          onClick={addRowHandler({ name: "name", type: "email" })}
+        >
+          Add Row
+        </button>
+      </Col>
+      <Col sm={6}>
+        <button
+          type="submit"
+          disabled={submitting}
+          className="form-buttons submit-button"
+        >
+          Create Mock Data
+        </button>
+      </Col>
     </Row>
   );
 };
@@ -44,15 +101,8 @@ const FormGenerator = props => {
         props={{ fields: fields }}
         component={RenderSchemaFields}
       />
-      <button
-        type="button"
-        onClick={addRowHandler({ name: "dummyField", type: "string" })}
-      >
-        Add Row
-      </button>
-      <button type="submit" disabled={submitting}>
-        Create Mock Data
-      </button>
+      <NumberOfRows />
+      <Buttons submitting={submitting} addRowHandler={addRowHandler} />
     </form>
   );
 };
@@ -60,7 +110,10 @@ const FormGenerator = props => {
 const FgForm = reduxForm({
   form: "fgform",
   destroyOnUnmount: false,
-  forceUnregisterOnUnmount: true
+  forceUnregisterOnUnmount: true,
+  initialValues: {
+    numRows: 100
+  }
 })(FormGenerator);
 
 export default FgForm;

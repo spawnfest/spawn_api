@@ -1,9 +1,10 @@
 import axios from "axios";
 
-function submit(values) {
+const submit = values => {
+  let rows = values.numRows;
   let schemaVals = values.fields.reduce((accumulator, f, index) => {
     let obj = {};
-    obj[f] = values.types[index];
+    obj[f] = values.types[index].value;
     return Object.assign(accumulator, obj);
   }, {});
   axios
@@ -13,6 +14,6 @@ function submit(values) {
     .then(response => {
       console.log(response);
     });
-}
+};
 
 export default submit;
