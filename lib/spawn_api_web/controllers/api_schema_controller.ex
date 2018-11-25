@@ -3,6 +3,7 @@ defmodule SpawnApiWeb.ApiSchemaController do
 
   alias SpawnApi.Spawn
   alias SpawnApi.Spawn.ApiSchema
+  alias SpawnApi.Utils.CSV, as: CSVUtils
 
   action_fallback SpawnApiWeb.FallbackController
 
@@ -38,11 +39,23 @@ defmodule SpawnApiWeb.ApiSchemaController do
     with {:ok, api_schema} <- Spawn.get_api_schema(id),
          {:ok, num_rows} <- SpawnApi.Utils.parse_integer(rows) do
       data = ApiSchema.generate_data(api_schema, %{}, num_rows)
-      render_file = String.to_existing_atom(Map.get(params, "file", "false"))
 
       conn
-      |> put_download_header(render_file)
       |> render("generated_data.json", %{schema: api_schema, data: data})
+    end
+  end
+
+  def export_csv(conn, %{"id" => id, "rows" => rows} = params) do
+    with {:ok, api_schema} <- Spawn.get_api_schema(id),
+         {:ok, num_rows} <- SpawnApi.Utils.parse_integer(rows) do
+      data = ApiSchema.generate_data(api_schema, %{}, num_rows)
+      render_file = String.to_existing_atom(Map.get(params, "file", "false"))
+
+      csv_data = CSVUtils.transpose_generated_data(data)
+
+      conn
+      |> put_download_header(params, render_file)
+      |> send_resp(200, csv_data)
     end
   end
 
@@ -73,9 +86,16 @@ defmodule SpawnApiWeb.ApiSchemaController do
     end
   end
 
-  defp put_download_header(conn, true) do
-    put_resp_header(conn, "Content-Disposition", "attachment")
+  defp put_download_header(conn, params, true) do
+    filename = Map.get(params, "filename", "data")
+    extension = Map.get(params, "format", "csv")
+
+    put_resp_header(
+      conn,
+      "Content-Disposition",
+      "attachment; filename=\"#{filename}.#{extension}\""
+    )
   end
 
-  defp put_download_header(conn, false), do: conn
+  defp put_download_header(conn, _params, false), do: conn
 end
