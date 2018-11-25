@@ -34,12 +34,14 @@ defmodule SpawnApiWeb.ApiSchemaController do
     end
   end
 
-  def generate(conn, %{"id" => id, "rows" => rows}) do
+  def generate(conn, %{"id" => id, "rows" => rows} = params) do
     with {:ok, api_schema} <- Spawn.get_api_schema(id),
          {:ok, num_rows} <- SpawnApi.Utils.parse_integer(rows) do
       data = ApiSchema.generate_data(api_schema, %{}, num_rows)
+      render_file = String.to_existing_atom(Map.get(params, "file", "false"))
 
       conn
+      |> put_download_header(render_file)
       |> render("generated_data.json", %{schema: api_schema, data: data})
     end
   end
@@ -70,4 +72,10 @@ defmodule SpawnApiWeb.ApiSchemaController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  defp put_download_header(conn, true) do
+    put_resp_header(conn, "Content-Disposition", "attachment")
+  end
+
+  defp put_download_header(conn, false), do: conn
 end
