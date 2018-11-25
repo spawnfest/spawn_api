@@ -33,4 +33,12 @@ defmodule SpawnApi.ApiSchemaTest do
       assert length(emails) == 10
     end
   end
+
+  test "generate data should return an empty map when given a non-positive integer" do
+    data =
+      api_schema_fixture(@valid_attrs)
+      |> ApiSchema.generate_data(%{}, 0)
+
+    assert data == %{}
+  end
 end

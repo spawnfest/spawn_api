@@ -25,8 +25,11 @@ defmodule SpawnApi.Spawn.ApiSchema do
     |> validate_required([:schema])
   end
 
-  @spec generate_data(schema(), Map.t()) :: Map.t()
-  def generate_data(%ApiSchema{} = api_schema, params \\ %{}, rows \\ 1000) do
+  @spec generate_data(schema(), Map.t(), integer) :: Map.t()
+  def generate_data(api_schema, params \\ %{}, rows \\ 1000)
+  def generate_data(_, _, rows) when rows <= 0, do: %{}
+
+  def generate_data(%ApiSchema{} = api_schema, params, rows) do
     Enum.reduce(api_schema.schema, %{}, fn {name, type}, acc ->
       data = generate_rows(type, params, rows)
       Map.put(acc, name, data)
