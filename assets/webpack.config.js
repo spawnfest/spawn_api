@@ -74,7 +74,7 @@ module.exports = (env, options) => ({
     new MiniCssExtractPlugin({ filename: "../css/app.css" }),
     new CopyWebpackPlugin([{ from: "static/", to: "../" }]),
     new webpack.DefinePlugin({
-      API_URL: JSON.stringify("http://www.spawn-api.com/api/api_schemas")
+      API_URL: JSON.stringify("https://www.spawn-api.com/api/api_schemas")
     })
   ]
 });
