@@ -14,7 +14,7 @@ config :spawn_api, SpawnApiWeb.Endpoint,
   http: [port: {:system, "PORT"}],
   server: true,
   secret_key_base: "${SECRET_KEY_BASE}",
-  url: [host: "anotherboring.website", port: 80],
+  url: [host: "spawn-api.com", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 config :spawn_api, SpawnApi.Repo,
